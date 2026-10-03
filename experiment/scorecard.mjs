@@ -87,6 +87,13 @@ for (const arm of arms) {
     .map((row) => Number(row.rework_minutes))
     .filter((value) => Number.isFinite(value) && value > 0);
 
+  // Acceptance gate: the visible test is the objective "is it done" signal.
+  const visibleFailed = rows.reduce((total, row) => {
+    const failed = Number(row.visible_fail);
+    return total + (Number.isFinite(failed) ? failed : 0);
+  }, 0);
+  const acceptanceGreen = rows.filter((row) => Number(row.visible_fail) === 0 && Number(row.visible_pass) > 0).length;
+
   summary[arm] = {
     runs: rows.length,
     median: median(minutes),
@@ -94,6 +101,8 @@ for (const arm of arms) {
     timeouts: rows.filter((row) => row.timed_out === 'true').length,
     hiddenFailed,
     hiddenPassed,
+    visibleFailed,
+    acceptanceGreen,
     reworkMedian: median(rework),
     reworkRange: range(rework),
   };
@@ -117,6 +126,8 @@ const rows = [
   ['runs over 60 min cap', summary.ai.timeouts, summary['no-ai'].timeouts],
   ['hidden tests failed', summary.ai.hiddenFailed, summary['no-ai'].hiddenFailed],
   ['hidden tests passed', summary.ai.hiddenPassed, summary['no-ai'].hiddenPassed],
+  ['visible tests failed', summary.ai.visibleFailed, summary['no-ai'].visibleFailed],
+  ['acceptance fully green', summary.ai.acceptanceGreen, summary['no-ai'].acceptanceGreen],
   ['median rework minutes', summary.ai.reworkMedian ?? '-', summary['no-ai'].reworkMedian ?? '-'],
   ['rework minutes range', summary.ai.reworkRange, summary['no-ai'].reworkRange],
 ];
@@ -124,13 +135,14 @@ for (const row of rows) console.log(line(row));
 
 console.log('\nPer task:');
 console.log('-'.repeat(70));
-console.log(line(['task', 'arm', 'minutes', 'timeout', 'hidden fail', 'rework min']));
+console.log(line(['task', 'arm', 'minutes', 'timeout', 'visible', 'hidden fail', 'rework min']));
 for (const run of scored) {
   console.log(line([
     run.task,
     run.arm,
     run.minutes,
     run.timed_out,
+    run.visible_fail === '0' ? 'green' : `${run.visible_pass}p/${run.visible_fail}f`,
     hidden.get(run.task)?.failed ?? 'n/a',
     run.rework_minutes || '-',
   ]));

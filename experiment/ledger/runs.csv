@@ -1,1 +1,1 @@
-task,arm,start_iso,end_iso,minutes,timed_out,files_changed,insertions,deletions,commits,first_green_minutes,rework_minutes,rework_commits,notes
+task,arm,start_iso,end_iso,minutes,timed_out,files_changed,insertions,deletions,commits,first_green_minutes,rework_minutes,rework_commits,visible_pass,visible_fail,notes

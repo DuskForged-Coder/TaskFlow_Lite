@@ -3,6 +3,7 @@ dist/
 dist-desktop/
 coverage/
 workspace/
+acceptance/
 .env
 .env.*
 !.env.example
