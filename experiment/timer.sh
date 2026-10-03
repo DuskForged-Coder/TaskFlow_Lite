@@ -134,6 +134,17 @@ cmd_start() {
   local branch="task/$task"
   git -C "$REPO_ROOT" show-ref --verify --quiet "refs/heads/$branch" || die "branch $branch does not exist"
 
+  # The recorded baseline is the single source of truth: the task branch must
+  # still point at it, otherwise the two arms would not start from the same code.
+  local recorded baseline
+  recorded=$(tr -d '[:space:]' < "$REPO_ROOT/experiment/baseline.sha")
+  baseline=$(git -C "$REPO_ROOT" rev-parse baseline-pre-experiment)
+  [[ -n "$recorded" && "$recorded" == "$baseline" ]] \
+    || die "experiment/baseline.sha ($recorded) does not match tag baseline-pre-experiment ($baseline)"
+  local branch_head; branch_head=$(git -C "$REPO_ROOT" rev-parse "$branch")
+  [[ "$branch_head" == "$baseline" ]] \
+    || die "$branch is not at the baseline ($branch_head); reset it with: git branch -f $branch baseline-pre-experiment"
+
   local worktree="$RUNS_ROOT/$task" spec
   mkdir -p "$RUNS_ROOT"
   [[ -e "$worktree" ]] && die "$worktree already exists; remove that run before starting $task"

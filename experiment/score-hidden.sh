@@ -45,6 +45,18 @@ if [[ ! -d "$WORKTREE/src" ]]; then
   echo "not a TaskFlow worktree: $WORKTREE" >&2
   exit 2
 fi
+
+# Cross-check the run against the recorded baseline so results are anchored to a
+# known commit rather than to whatever the worktree happens to contain.
+BASELINE_SHA_FILE="$REPO_ROOT/experiment/baseline.sha"
+if [[ -f "$BASELINE_SHA_FILE" ]]; then
+  RECORDED=$(tr -d '[:space:]' < "$BASELINE_SHA_FILE")
+  TAG_SHA=$(git -C "$REPO_ROOT" rev-parse baseline-pre-experiment 2>/dev/null || echo "")
+  if [[ -n "$TAG_SHA" && "$RECORDED" != "$TAG_SHA" ]]; then
+    echo "baseline mismatch: experiment/baseline.sha=$RECORDED tag=$TAG_SHA" >&2
+    exit 5
+  fi
+fi
 if [[ ! -d "$SOURCE_DIR" ]]; then
   echo "hidden test directory not found: $SOURCE_DIR" >&2
   exit 3
