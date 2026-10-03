@@ -1,0 +1,23 @@
+{
+  "name": "unnamed",
+  "version": null,
+  "description": "",
+  "access": {
+    "read": [
+      "**/*"
+    ],
+    "write": [],
+    "execute": false,
+    "deny": []
+  },
+  "ignore": [],
+  "index": [
+    "**/*"
+  ],
+  "instructions": "",
+  "meta": {}
+}
+
+
+
+
