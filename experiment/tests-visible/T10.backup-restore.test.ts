@@ -67,7 +67,7 @@ describe('T10 backup and restore', () => {
     await app.interpretRequest('add alpha task');
     const target = join(directory!, 'backup.db');
     await app.interpretRequest(`backup ${target}`);
-    await app.interpretRequest('add task created after backup');
+    await app.interpretRequest('add task created post backup');
 
     const proposal = await app.interpretRequest(`restore ${target}`);
     expect(proposal.status).toBe('confirmation');
@@ -76,7 +76,7 @@ describe('T10 backup and restore', () => {
     // Declining must leave live data untouched.
     expect(app.confirmRequest(proposal.intent, false).status).toBe('done');
     const after = await app.interpretRequest('show my tasks');
-    expect(after.message).toContain('task created after backup');
+    expect(after.message).toContain('task created post backup');
   });
 
   it('restores the backup contents when confirmed', async () => {
@@ -84,7 +84,7 @@ describe('T10 backup and restore', () => {
     await app.interpretRequest('add alpha task');
     const target = join(directory!, 'backup.db');
     await app.interpretRequest(`backup ${target}`);
-    await app.interpretRequest('add task created after backup');
+    await app.interpretRequest('add task created post backup');
 
     const proposal = await app.interpretRequest(`restore ${target}`);
     if (proposal.status !== 'confirmation') throw new Error('Expected a confirmation proposal');
@@ -92,7 +92,7 @@ describe('T10 backup and restore', () => {
 
     const after = await app.interpretRequest('show my tasks');
     expect(after.message).toContain('alpha task');
-    expect(after.message).not.toContain('task created after backup');
+    expect(after.message).not.toContain('task created post backup');
   });
 
   it('reports a missing backup file and a corrupt file without crashing', async () => {
