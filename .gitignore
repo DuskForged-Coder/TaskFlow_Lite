@@ -4,6 +4,7 @@ dist-desktop/
 coverage/
 workspace/
 acceptance/
+hidden-results.jsonl
 .env
 .env.*
 !.env.example

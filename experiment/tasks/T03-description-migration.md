@@ -17,8 +17,10 @@ and expose it in the command surface.
    `note finish DBMS <text>` followed by `show my tasks` showing it, or an
    equivalent design agreed in the notes.
 5. Setting a description longer than 200 characters raises a `UserError`.
-6. A description containing a terminal control character raises a `UserError`
-   (matching the existing title/description validation).
+6. A description containing a terminal control character raises a `UserError`.
+   `notes` follows the same validation as the task title: control characters are
+   rejected and the value is trimmed, capped at 200 characters, and stored as
+   `null` when empty.
 7. Undo restores the previous description value.
 8. The undo snapshot of a task created before migration 5 still restores
    (missing field defaults to `null`, matching the `estimateMinutes` precedent).

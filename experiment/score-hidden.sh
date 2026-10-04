@@ -115,8 +115,18 @@ rm -f "$LOG"
 
 BRANCH=$(git -C "$WORKTREE" rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)
 STAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+# Results follow the worktree: validating against a run worktree must never write
+# into the main ledger, which stays empty until the real experiment runs.
+RESULT_DIR="${TASKFLOW_RESULT_DIR:-}"
+if [[ -z "$RESULT_DIR" ]]; then
+  case "$WORKTREE" in
+    "$REPO_ROOT"/*) RESULT_DIR="$REPO_ROOT/experiment/ledger" ;;
+    *) RESULT_DIR="$WORKTREE/experiment/ledger" ;;
+  esac
+fi
+mkdir -p "$RESULT_DIR"
 printf '{"task":"%s","branch":"%s","passed":%s,"failed":%s,"exit":%s,"at":"%s"}\n' \
-  "$TASK" "$BRANCH" "$PASSED" "$FAILED" "$STATUS" "$STAMP" >> "$LEDGER_DIR/hidden-results.jsonl"
+  "$TASK" "$BRANCH" "$PASSED" "$FAILED" "$STATUS" "$STAMP" >> "$RESULT_DIR/hidden-results.jsonl"
 
 cleanup
 echo "hidden $TASK: $PASSED passed, $FAILED failed"
