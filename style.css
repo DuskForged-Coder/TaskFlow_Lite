@@ -37,6 +37,10 @@ body {
   flex: 1;
 }
 
+#task-list li.completed span {
+  text-decoration: line-through;
+}
+
 #error-msg {
   color: red;
 }

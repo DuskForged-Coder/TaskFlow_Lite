@@ -7,6 +7,12 @@ const errorMsg = document.getElementById("error-msg");
 function createTaskItem(text) {
   const li = document.createElement("li");
 
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.addEventListener("change", () => {
+    li.classList.toggle("completed", checkbox.checked);
+  });
+
   const span = document.createElement("span");
   span.textContent = text;
 
@@ -29,7 +35,7 @@ function createTaskItem(text) {
     li.remove();
   });
 
-  li.append(span, editBtn, deleteBtn);
+  li.append(checkbox, span, editBtn, deleteBtn);
   return li;
 }
 
