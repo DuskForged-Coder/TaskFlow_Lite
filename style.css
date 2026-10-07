@@ -25,6 +25,15 @@ body {
   padding: 0;
 }
 
+#task-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+#error-msg {
+  color: red;
+}
+
 @media (max-width: 480px) {
   body {
     padding: 12px;
