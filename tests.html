@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow Lite - Tests</title>
+</head>
+<body>
+  <main>
+    <h1>TaskFlow Lite - Tests</h1>
+    <!-- Same markup/IDs as index.html so the real script.js binds to it -->
+    <div class="input-row">
+      <input type="text" id="task-input" placeholder="Enter a task">
+      <button id="add-btn">Add</button>
+    </div>
+    <ul id="task-list"></ul>
+    <p id="error-msg"></p>
+    <h2>Results</h2>
+    <p id="summary"></p>
+    <ul id="results"></ul>
+  </main>
+  <!-- Load the app's existing logic (no copy of it here) -->
+  <script src="script.js"></script>
+  <script>
+  (function () {
+    var list = document.getElementById("task-list");
+    var input = document.getElementById("task-input");
+    var addBtn = document.getElementById("add-btn");
+    var err = document.getElementById("error-msg");
+    var resultsEl = document.getElementById("results");
+    var summaryEl = document.getElementById("summary");
+    var realPrompt = window.prompt;
+    var passed = 0;
+    var total = 10;
+
+    function reset() {
+      localStorage.clear();
+      list.innerHTML = "";
+      input.value = "";
+      err.textContent = "";
+      window.prompt = realPrompt;
+    }
+
+    function show(name, ok) {
+      var li = document.createElement("li");
+      li.textContent = (ok ? "PASS" : "FAIL") + " - " + name;
+      resultsEl.appendChild(li);
+      if (ok) passed++;
+    }
+
+    function items() {
+      return list.querySelectorAll("li");
+    }
+
+    function addViaUI(text) {
+      input.value = text;
+      addBtn.click();
+    }
+
+    function pressEnter(text) {
+      input.value = text;
+      var e = new KeyboardEvent("keydown", { key: "Enter", bubbles: true });
+      input.dispatchEvent(e);
+    }
+
+    // 1. Adding a normal task makes it appear in the list
+    reset();
+    addViaUI("Buy milk");
+    show("Adding a normal task makes it appear in the list",
+      items().length === 1 && items()[0].querySelector("span").textContent === "Buy milk");
+
+    // 2. Empty input is rejected
+    reset();
+    addViaUI("");
+    show("Empty input is rejected",
+      items().length === 0 && err.textContent !== "");
+
+    // 3. Whitespace-only input is rejected
+    reset();
+    addViaUI("   ");
+    show("Whitespace-only input is rejected",
+      items().length === 0 && err.textContent !== "");
+
+    // 4. Pressing Enter adds the task
+    reset();
+    pressEnter("Enter task");
+    show("Pressing Enter adds the task",
+      items().length === 1 && items()[0].querySelector("span").textContent === "Enter task");
+
+    // 5. Editing changes the task text
+    reset();
+    addViaUI("Old text");
+    window.prompt = function () { return "New text"; };
+    items()[0].querySelectorAll("button")[0].click();
+    window.prompt = realPrompt;
+    show("Editing changes the task text",
+      items()[0].querySelector("span").textContent === "New text");
+
+    // 6. Saving an empty edit is rejected
+    reset();
+    addViaUI("Keep me");
+    window.prompt = function () { return "   "; };
+    items()[0].querySelectorAll("button")[0].click();
+    window.prompt = realPrompt;
+    show("Saving an empty edit is rejected",
+      items()[0].querySelector("span").textContent === "Keep me" && err.textContent !== "");
+
+    // 7. Delete removes only the chosen task
+    reset();
+    addViaUI("Task A");
+    addViaUI("Task B");
+    items()[0].querySelectorAll("button")[1].click();
+    var remaining = items();
+    show("Delete removes only the chosen task",
+      remaining.length === 1 && remaining[0].querySelector("span").textContent === "Task B");
+
+    // 8. Ticking marks a task complete (crossed out)
+    reset();
+    addViaUI("Complete me");
+    var box8 = items()[0].querySelector("input[type='checkbox']");
+    box8.checked = true;
+    box8.dispatchEvent(new Event("change", { bubbles: true }));
+    show("Ticking marks a task complete (crossed out)",
+      items()[0].classList.contains("completed"));
+
+    // 9. Unticking removes the strike-through
+    reset();
+    addViaUI("Toggle me");
+    var box9 = items()[0].querySelector("input[type='checkbox']");
+    box9.checked = true;
+    box9.dispatchEvent(new Event("change", { bubbles: true }));
+    box9.checked = false;
+    box9.dispatchEvent(new Event("change", { bubbles: true }));
+    show("Unticking removes the strike-through",
+      !items()[0].classList.contains("completed"));
+
+    // 10. Tasks and their complete state survive a reload (localStorage)
+    reset();
+    addViaUI("Persist A");
+    addViaUI("Persist B");
+    var box10 = items()[0].querySelector("input[type='checkbox']");
+    box10.checked = true;
+    box10.dispatchEvent(new Event("change", { bubbles: true }));
+    list.innerHTML = ""; // simulate reload: wipe DOM, re-read storage
+    loadTasks();
+    var reloaded = items();
+    show("Tasks and their complete state survive a reload (localStorage)",
+      reloaded.length === 2 &&
+      reloaded[0].querySelector("span").textContent === "Persist A" &&
+      reloaded[0].querySelector("input[type='checkbox']").checked === true &&
+      reloaded[0].classList.contains("completed") &&
+      reloaded[1].querySelector("span").textContent === "Persist B" &&
+      reloaded[1].querySelector("input[type='checkbox']").checked === false);
+
+    window.prompt = realPrompt;
+    summaryEl.textContent = passed + " / " + total + " passed";
+  })();
+  </script>
+</body>
+</html>
