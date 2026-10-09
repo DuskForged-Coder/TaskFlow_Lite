@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node", "electron"],
+    "noEmit": false,
+    "outDir": "dist-desktop",
+    "rootDir": "src"
+  },
+  "include": [
+    "src/desktop/**/*.ts",
+    "src/app/**/*.ts",
+    "src/core/**/*.ts",
+    "src/config/**/*.ts",
+    "src/ai/**/*.ts",
+    "src/commands/**/*.ts",
+    "src/utils/**/*.ts",
+    "src/db/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist", "tests", "src/tui"]
+}

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # skills working dirs
 .agents/skills/_sources/
 .agents/skills/_quarantine/
@@ -33,3 +34,25 @@ secrets/
 !.vscode/extensions.json
 # logs
 *.log
+=======
+node_modules/
+dist/
+dist-desktop/
+coverage/
+workspace/
+acceptance/
+hidden-results.jsonl
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite3-shm
+*.sqlite3-wal
+*.log
+.DS_Store
+.idea/
+.vscode/
+>>>>>>> 13543ed91e8b40e1b5d9828f88600aa1dae604f2
