@@ -1,0 +1,52 @@
+{
+  "resolution_strategy": "priority_first_match",
+  "sources": [
+    {
+      "id": "anthropic-official",
+      "notes": "Spec, template, document skills.",
+      "priority": 1,
+      "ref": "main",
+      "repo": "https://github.com/anthropics/skills",
+      "subpath": null,
+      "trust": "official"
+    },
+    {
+      "id": "sstobo-workflow",
+      "notes": "ship-it, scour, check, inquisitor.",
+      "priority": 2,
+      "ref": "main",
+      "repo": "https://github.com/Sstobo/skills",
+      "subpath": null,
+      "trust": "community"
+    },
+    {
+      "id": "adampie-pr",
+      "notes": "PR workflow + upskill.",
+      "priority": 3,
+      "ref": "main",
+      "repo": "https://github.com/adampie/skills",
+      "subpath": null,
+      "trust": "community"
+    },
+    {
+      "id": "alirezarezvani-core",
+      "notes": "380 skills. Stdlib-only scripts.",
+      "priority": 4,
+      "ref": "main",
+      "repo": "https://github.com/alirezarezvani/claude-skills",
+      "subpath": null,
+      "trust": "community"
+    },
+    {
+      "id": "artubss-hub",
+      "notes": "1044+ skills. Fallback only.",
+      "priority": 5,
+      "ref": "main",
+      "repo": "https://github.com/artubss/SKILLS-CLAUDE-CODE",
+      "subpath": null,
+      "trust": "community"
+    }
+  ],
+  "updated": "2026-10-07",
+  "version": 1
+}

@@ -1,0 +1,35 @@
+# skills working dirs
+.agents/skills/_sources/
+.agents/skills/_quarantine/
+.dev/.cache/
+.dev/.gate-tokens
+# node
+node_modules/
+.next/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+# secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+# os/editor
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+# logs
+*.log
