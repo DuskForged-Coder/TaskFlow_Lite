@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- The renderer loads only local assets and talks to no remote origin. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:;"
+    />
+    <title>TaskFlow</title>
+    <link rel="stylesheet" href="orb.css" />
+  </head>
+  <body>
+    <!-- Collapsed state: a draggable orb showing today's load at a glance. -->
+    <div id="orb" class="orb" role="button" tabindex="0" aria-label="Open TaskFlow">
+      <div class="orb-glow" aria-hidden="true"></div>
+      <div class="orb-core">
+        <span id="orb-count" class="orb-count">–</span>
+        <span class="orb-label">today</span>
+      </div>
+      <span id="orb-overdue" class="orb-badge" hidden>!</span>
+    </div>
+
+    <!-- Expanded state: a read-only summary panel. -->
+    <section id="panel" class="panel" hidden aria-label="TaskFlow summary">
+      <header class="panel-head">
+        <div>
+          <h1>TaskFlow</h1>
+          <p id="panel-ai" class="panel-ai">Checking AI…</p>
+        </div>
+        <div class="panel-actions">
+          <button id="collapse" class="icon-button" title="Collapse to orb" aria-label="Collapse to orb">–</button>
+          <button id="quit" class="icon-button" title="Quit TaskFlow" aria-label="Quit TaskFlow">×</button>
+        </div>
+      </header>
+
+      <div class="panel-stats">
+        <div class="stat">
+          <span id="stat-today" class="stat-value">0</span>
+          <span class="stat-label">due today</span>
+        </div>
+        <div class="stat">
+          <span id="stat-overdue" class="stat-value">0</span>
+          <span class="stat-label">overdue</span>
+        </div>
+      </div>
+
+      <div class="next">
+        <p class="next-label">Recommended next</p>
+        <p id="next-title" class="next-title">Nothing scheduled.</p>
+        <p id="next-reason" class="next-reason"></p>
+      </div>
+
+      <p class="panel-hint">
+        This orb is read-only. Run <code>taskflow</code> in a terminal to make changes.
+      </p>
+    </section>
+
+    <script src="orb.js"></script>
+  </body>
+</html>
