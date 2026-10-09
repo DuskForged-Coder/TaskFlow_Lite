@@ -1,0 +1,24 @@
+Seeded bug Y for task T08.
+Applied automatically by `experiment/timer.sh start T08 <arm>` on branch task/T08.
+Never commit this patch to main.
+
+Defect: ProjectService.createProject() drops the 80-character limit check on the
+project name. An over-long name is accepted and persisted, and it then flows
+straight into the terminal task list where the project label is rendered.
+
+The 191 tests in tests/ never exercise project-name validation at all, so the
+existing suite stays green with this patch applied. Only
+experiment/tests-visible/T08 detects it.
+
+diff --git a/src/core/projects/projectService.ts b/src/core/projects/projectService.ts
+index 8ca6b10..f5e089e 100644
+--- a/src/core/projects/projectService.ts
++++ b/src/core/projects/projectService.ts
+@@ -16,7 +16,6 @@ export class ProjectService {
+   createProject(name: string): Project {
+     const normalized = name.trim();
+     if (!normalized) throw new UserError('A project name cannot be empty.');
+-    if (normalized.length > 80) throw new UserError('A project name cannot exceed 80 characters.');
+     if (/[\u0000-\u001F\u007F-\u009F]/.test(normalized)) throw new UserError('A project name cannot contain terminal control characters.');
+     if (this.repository.findByName(normalized)) throw new UserError(`A project named “${normalized}” already exists.`);
+     return this.repository.create({ id: this.createId(), name: normalized, createdAt: this.clock().toISOString() });

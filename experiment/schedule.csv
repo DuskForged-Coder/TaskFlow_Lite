@@ -1,0 +1,27 @@
+# TaskFlow AI experiment: counterbalanced randomized schedule
+#
+# RNG: mulberry32, fixed seed 20260930. Generated once and frozen.
+# This file must NEVER be regenerated. Re-running the generator with a different
+# seed after data has been collected would silently invalidate the experiment.
+#
+# Design: 5 twin-pairs. Each pair contains two tasks of matched difficulty that
+# touch the same subsystem. For every pair, one twin is run with the AI assistant
+# ("ai") and the other without ("no-ai"). The pair ORDER is also randomized so
+# that neither a particular task nor a particular subsystem is always measured
+# first (guards against learning/warm-up effects).
+#
+# T00 is a practice task and is excluded from all results.
+#
+# Columns:
+#   pair, task, arm, twin_of, subsystem, position, instructions
+pair,task,arm,twin_of,pair_position,within_pair_position,subsystem
+2,T04,no-ai,T03,1,1,core-migration
+2,T03,ai,T04,1,2,core-migration
+1,T01,no-ai,T02,2,1,commands-search
+1,T02,ai,T01,2,2,commands-search
+3,T06,no-ai,T05,3,1,feature-focus
+3,T05,ai,T06,3,2,feature-recurring
+5,T10,no-ai,T09,4,1,data-restore
+5,T09,ai,T10,4,2,data-export
+4,T07,no-ai,T08,5,1,defect-ambiguity
+4,T08,ai,T07,5,2,defect-project-name

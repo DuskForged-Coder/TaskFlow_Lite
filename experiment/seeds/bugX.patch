@@ -1,0 +1,25 @@
+Seeded bug X for task T07.
+Applied automatically by `experiment/timer.sh start T07 <arm>` on branch task/T07.
+Never commit this patch to main.
+
+Defect: resolveTask() silently returns the first partial match instead of
+refusing an ambiguous request. A destructive command such as `delete report`
+can therefore hit the wrong task when several titles contain "report".
+
+The 191 tests in tests/ do not cover the multi-match branch, so the existing
+suite stays green with this patch applied. Only experiment/tests-visible/T07
+detects it.
+
+diff --git a/src/app/application.ts b/src/app/application.ts
+--- a/src/app/application.ts
++++ b/src/app/application.ts
+@@ -391,8 +391,7 @@ export class TaskFlowApplication {
+     const exact = matches.filter((task) => task.title.toLocaleLowerCase() === normalizedQuery);
+     if (exact.length === 1) return exact[0]!;
+     if (matches.length > 1) {
+-      const titles = matches.slice(0, 4).map((task) => `“${task.title}”`).join(', ');
+-      throw new UserError(`That matches more than one task: ${titles}. Use a more specific title.`);
++      return matches[0]!;
+     }
+     const task = matches[0];
+     if (!task) throw new AIError();
